@@ -1,0 +1,8 @@
+name = "cognov"
+main = "server.py"
+compatibility_date = "2024-03-12"
+compatibility_flags = ["python_workers"]
+
+# Environment bindings are injected directly into the worker runtime
+[vars]
+# Add non-sensitive variables here if needed
