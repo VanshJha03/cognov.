@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CognoV · Developer-First Inventory Ledger & Accounting API</title>
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="CognoV is an API-first accounting engine translating business actions into double-entry journal logs. Get real-time trial balances, balance sheets, and usage analytics.">
+    <meta name="keywords" content="Accounting API, Ledger Database, Double Entry Ledger, Inventory accounting, Developer API">
+    <meta name="author" content="CognoV">
+    
+    <!-- External stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CognoV</div>
+            <div class="nav-links">
+                <a href="#home" class="active">Home</a>
+                <a href="#dashboard-section">Console</a>
+                <a href="#docs">API Docs</a>
+                <a href="#privacy">Privacy</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- ======================= HOME PAGE ======================= -->
+        <section class="container page-view active" id="home" style="padding: 120px 0;">
+            <div class="grid-2" style="align-items: center;">
+                <div>
+                    <h1>Translate business events<br>into credits & debits.</h1>
+                    <p style="margin-bottom: 36px; font-size: 1.15rem;">CognoV is an API-first double-entry ledger engine. Push inventory events, retail sales, or purchasing details directly from your inventory software, and compile structured debit/credit journal postings instantly.</p>
+                    <div class="hero-actions">
+                        <a href="#dashboard-section" class="btn btn-primary">Create Developer Account</a>
+                        <a href="#docs" class="btn btn-outline">Explore API Docs</a>
+                    </div>
+                </div>
+                
+                <!-- Interactive Ledger Visualizer -->
+                <div class="ledger-demo glass-panel">
+                    <div class="ledger-header">
+                        <div class="window-controls">
+                            <span class="window-dot"></span>
+                            <span class="window-dot"></span>
+                            <span class="window-dot"></span>
+                        </div>
+                        <div class="ledger-tabs">
+                            <button class="ledger-tab hero-tab-btn active" data-demo="sales">POST /sales</button>
+                            <button class="ledger-tab hero-tab-btn" data-demo="purchase">POST /purchase</button>
+                            <button class="ledger-tab hero-tab-btn" data-demo="initialize">POST /initialize</button>
+                        </div>
+                    </div>
+                    <div class="ledger-body">
+                        <div class="code-editor">
+                            <div class="code-title">HTTP Request Payload</div>
+                            <pre class="code-block"><code class="code-json" id="heroRequestCode">// Click tabs to populate json</code></pre>
+                        </div>
+                        <div class="ledger-output">
+                            <div class="code-title">HTTP Response Output</div>
+                            <div class="ledger-result-list" id="heroJournalList">
+                                <!-- Dynamic JS ledger rows -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= DEVELOPER CONSOLE PAGE ======================= -->
+        <section class="container page-view" id="dashboard-section" style="padding: 64px 0;">
+            <h2>📊 Developer Console</h2>
+            
+            <!-- Environment / Backend URL Config -->
+            <div class="card glass-panel" style="margin-bottom: 32px; padding: 20px 32px;">
+                <div class="flex-between" style="flex-wrap: wrap;">
+                    <div>
+                        <h3 style="margin-bottom: 4px; font-size: 1.1rem;">API Target Backend</h3>
+                        <p style="font-size: 0.85rem;">Verify the url of your hosted server (Render, local target, or your custom Cloudflare Worker).</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-grow: 1; max-width: 500px;">
+                        <input type="text" id="backendUrlInput" placeholder="https://throbbing-bread-28b9.notthethunder.workers.dev" style="padding: 10px 14px; font-size: 0.85rem;">
+                        <button class="btn btn-secondary" id="saveBackendUrlBtn" style="padding: 10px 18px; font-size: 0.85rem;">Update Target</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login/Signup Split-screen View (shown by default) -->
+            <div id="loginCard">
+                <div class="auth-split-grid">
+                    <!-- Left: Signup / Account Generation -->
+                    <div class="card glass-panel">
+                        <div class="flex-between" style="margin-bottom: 16px;">
+                            <h3>🔑 Generate Developer Account</h3>
+                            <span class="badge">Registration</span>
+                        </div>
+                        <p style="margin-bottom: 24px; font-size: 0.9rem;">Register a developer workspace to obtain your Developer API Key. This key allows you to provision user sub-nodes and query all sub-client transaction logs.</p>
+                        
+                        <div class="form-group">
+                            <label for="signupEntityInput">Organization / Entity Name</label>
+                            <input type="text" id="signupEntityInput" placeholder="e.g., Acme Inventory Tools">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signupSecretInput">Master Secret</label>
+                            <input type="password" id="signupSecretInput" placeholder="Leave empty for default sandbox secret">
+                        </div>
+                        
+                        <button class="btn btn-primary" id="signUpBtn" style="width: 100%;">Create Account & Get Key</button>
+                        
+                        <div id="signupResultContainer"></div>
+                    </div>
+
+                    <!-- Middle: Visual Divider -->
+                    <div class="auth-divider">
+                        <span class="auth-divider-text">OR</span>
+                    </div>
+
+                    <!-- Right: Login / Access Console -->
+                    <div class="card glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <div class="flex-between" style="margin-bottom: 16px;">
+                                <h3>🔐 Connect Console</h3>
+                                <span class="badge">Session login</span>
+                            </div>
+                            <p style="margin-bottom: 24px; font-size: 0.9rem;">If you already have a Developer API Key, paste it here to authenticate your developer dashboard console session.</p>
+                            
+                            <div class="form-group">
+                                <label for="ownerKeyInput">Developer API Key</label>
+                                <div class="input-password-wrapper">
+                                    <input type="password" id="ownerKeyInput" placeholder="cognov_xxxxxxxxxxxxx">
+                                    <button type="button" class="password-toggle" id="togglePasswordBtn">Show</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-secondary" id="loginBtn" style="width: 100%; margin-top: 24px;">Connect Console →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content (hidden until login) -->
+            <div id="dashboardContent" style="display: none;">
+                
+                <!-- Stats Grid -->
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Registered Client Sub-Nodes</span>
+                        <span class="stat-val" id="statTotalClients">0</span>
+                        <span class="stat-sub">Client user accounts</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Transactions Logs</span>
+                        <span class="stat-val" id="statTotalTransactions">0</span>
+                        <span class="stat-sub">Ledger postings all-time</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Accrued Usage Cost</span>
+                        <span class="stat-val" id="statTotalCost">$0.00</span>
+                        <span class="stat-sub">Calculated at $1.00 / 1k postings</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <!-- Register User Panel -->
+                    <div class="card glass-panel">
+                        <h3>➕ Register Client Sub-Node</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.9rem;">Register a new customer node (client) within your database. This creates an isolated ledger target. When calling transaction APIs for this user, supply this generated Client User ID.</p>
+                        <button class="btn btn-primary" id="registerUserBtn">Register Client ID</button>
+                        
+                        <div id="registerResult" style="display: none;"></div>
+                    </div>
+
+                    <!-- Client Status & Rate Info -->
+                    <div class="card glass-panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <h3>⚡ API Limits & Operations</h3>
+                            <p style="font-size: 0.9rem; margin-bottom: 16px;">Each transaction processed through the API updates the sub-tenant's account ledger. Usage is tracked dynamically.</p>
+                            <ul style="color: var(--text-secondary); padding-left: 20px; font-size: 0.85rem; line-height: 1.8;">
+                                <li>Rate limit: <strong>100 requests per minute</strong> per Client ID</li>
+                                <li>Cloudflare Edge routing handles high-availability processing</li>
+                                <li>Authentication requires your developer API key</li>
+                            </ul>
+                        </div>
+                        <div style="margin-top: 24px; display: flex; gap: 8px;">
+                            <span class="badge badge-success">Rate Limiter Active</span>
+                            <span class="badge">TLS 1.3 Encryption</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients Grid Table -->
+                <div class="card glass-panel" style="margin-top: 32px;">
+                    <div class="flex-between" style="margin-bottom: 24px;">
+                        <h3>👥 Active Client Nodes</h3>
+                        <div style="display:flex; gap:12px;">
+                            <button id="refreshDashboardBtn" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.85rem;">⟳ Reload Data</button>
+                            <button id="logoutBtn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;">Disconnect Console</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Client User ID</th>
+                                    <th>Registered Date</th>
+                                    <th>Postings (24h)</th>
+                                    <th>Postings (Total)</th>
+                                    <th>Accrued Cost</th>
+                                    <th style="text-align: right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 20px 0; color: var(--text-muted);">
+                                        Querying client list...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= API DOCUMENTATION PAGE ======================= -->
+        <section class="container page-view" id="docs" style="padding: 64px 0;">
+            <h2>📖 Developer API Docs</h2>
+            
+            <div class="docs-layout">
+                <!-- Anchor sidebar -->
+                <aside class="docs-nav">
+                    <a href="#docs-intro" class="docs-nav-link active">Introduction</a>
+                    <a href="#docs-output" class="docs-nav-link">How Output is Received</a>
+                    <a href="#docs-auth" class="docs-nav-link">Authentication</a>
+                    <a href="#docs-register" class="docs-nav-link">POST /register_user</a>
+                    <a href="#docs-txn" class="docs-nav-link">POST /transaction</a>
+                    <a href="#docs-fetch" class="docs-nav-link">GET /fetch/{user_id}</a>
+                    <a href="#docs-tester" class="docs-nav-link">API Live Tester</a>
+                </aside>
+
+                <!-- Documentation Content -->
+                <div>
+                    
+                    <!-- Intro -->
+                    <div class="docs-section" id="docs-intro">
+                        <h3>Introduction</h3>
+                        <p style="margin-bottom: 16px;">CognoV provides enterprise ledger accounts as an API utility. Developers integrate CognoV directly into their e-commerce checkouts, billing systems, or ERP systems to convert business operations into double-entry accounting records automatically.</p>
+                        <p>Your inventory management app communicates directly with our API endpoints. You do not route calls through this frontend dashboard; your app calls your Cloudflare worker backend directly.</p>
+                    </div>
+
+                    <!-- Output Delivery Architecture -->
+                    <div class="docs-section" id="docs-output" style="border-left: 2px solid var(--border-active); padding-left: 20px;">
+                        <h3 style="color: var(--accent);">How Output is Received</h3>
+                        <p style="margin-bottom: 16px;">CognoV utilizes a synchronous <strong>Request-Response</strong> architectural lifecycle. When your inventory management system issues a transaction request, the execution flow behaves as follows:</p>
+                        
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+                            <ol style="margin-left: 20px; color: var(--text-secondary); line-height: 1.8;">
+                                <li><strong style="color: var(--text-primary);">HTTP POST request:</strong> Your app sends payload data containing the transaction type, quantities, and pricing to the <code>/transaction</code> endpoint.</li>
+                                <li><strong style="color: var(--text-primary);">Synchronous Execution:</strong> The backend calculates unit cost tracking, posts debit/credit entries, updates the trial balances/balance sheets, and records database transactions.</li>
+                                <li><strong style="color: var(--text-primary);">HTTP JSON Response:</strong> The backend immediately returns the ledger outcome in the HTTP response body. Your inventory system parses this JSON directly from the connection response stream.</li>
+                            </ol>
+                        </div>
+
+                        <h4 style="font-size: 0.95rem; font-weight:600; margin-bottom: 12px; color: var(--text-primary);">Example Request-Response Body Mappings</h4>
+                        
+                        <!-- Tabs block of response payloads -->
+                        <div class="card glass-panel" style="padding: 24px; margin-bottom: 20px;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">1. Sales Event Response Schema</div>
+                            <p style="font-size: 0.85rem; margin-bottom: 12px;">Returned immediately upon a successful sales posting, containing computed cash changes and Cost of Goods Sold (COGS) metrics.</p>
+                            <pre class="code-block"><code class="code-json">{
+  "debit": "Cash",
+  "credit": "Sales Revenue",
+  "revenue": 950.00,
+  "cogs": 500.00
+}</code></pre>
+                        </div>
+
+                        <div class="card glass-panel" style="padding: 24px; margin-bottom: 20px;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">2. Purchase/Inventory Inflow Response Schema</div>
+                            <p style="font-size: 0.85rem; margin-bottom: 12px;">Returned immediately upon a stock acquisition purchase posting, specifying asset classification changes and totals.</p>
+                            <pre class="code-block"><code class="code-json">{
+  "debit": "Inventory",
+  "credit": "Cash",
+  "amount": 250.00
+}</code></pre>
+                        </div>
+
+                        <h4 style="font-size: 0.95rem; font-weight:600; margin-bottom: 12px; color: var(--text-primary);">Response Status Codes</h4>
+                        <ul style="color: var(--text-secondary); margin-left: 20px; line-height: 1.8; font-size: 0.9rem;">
+                            <li><code>HTTP 200 OK</code>: Transaction processed successfully. Ledger records logged.</li>
+                            <li><code>HTTP 400 Bad Request</code>: Insufficient inventory, unknown item, or invalid payload schema.</li>
+                            <li><code>HTTP 401 Unauthorized</code>: The Developer API Key is missing or invalid.</li>
+                            <li><code>HTTP 429 Too Many Requests</code>: Client rate limits (100req/min) exceeded.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Auth -->
+                    <div class="docs-section" id="docs-auth">
+                        <h3>Authentication</h3>
+                        <p style="margin-bottom: 20px;">All API requests must supply an authentication header or URL query parameter. There are two tiers of credentials:</p>
+                        
+                        <div class="param-list">
+                            <div class="param-row">
+                                <div class="param-name">Owner Key</div>
+                                <div class="param-type">String</div>
+                                <div class="param-desc">Superkey representing the main entity. Carries master permissions to run ledger queries for any client under its node. Format: <code>cognov_xxxxxxxxxx</code>.</div>
+                            </div>
+                            <div class="param-row">
+                                <div class="param-name">api_key</div>
+                                <div class="param-type">Query Param</div>
+                                <div class="param-desc">Provide authorization via query param: <code>?api_key=your_owner_key</code>.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Endpoints -->
+                    <div class="docs-section" id="docs-register">
+                        <h3>Register User Node</h3>
+                        <div class="endpoint-card">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method">POST</span>
+                                <span class="endpoint-path">/register_user</span>
+                            </div>
+                            <div class="endpoint-body">
+                                <p class="endpoint-desc">Creates a new tenant user node under the owner account. Generates an isolated ledger structure.</p>
+                                
+                                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--text-primary);">Query Parameters</h4>
+                                <div class="param-list">
+                                    <div class="param-row">
+                                        <div class="param-name">api_key</div>
+                                        <div class="param-type">required</div>
+                                        <div class="param-desc">Owner master key.</div>
+                                    </div>
+                                </div>
+
+                                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--text-primary);">Response Payload</h4>
+                                <pre class="code-block"><code class="code-json">{
+  "user_id": "8c45fd8e-71be-4d8b-944a-8dcd4f5e82a2",
+  "api_key": "cognov_owner_api_key_value"
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="docs-section" id="docs-txn">
+                        <h3>Execute Transaction</h3>
+                        <div class="endpoint-card">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method">POST</span>
+                                <span class="endpoint-path">/transaction</span>
+                            </div>
+                            <div class="endpoint-body">
+                                <p class="endpoint-desc">Submits business inventory or cash movements to compile debit/credit journals.</p>
+                                
+                                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--text-primary);">Request Body schema</h4>
+                                <div class="param-list">
+                                    <div class="param-row">
+                                        <div class="param-name">api_key</div>
+                                        <div class="param-type">string</div>
+                                        <div class="param-desc">Owner master key credentials.</div>
+                                    </div>
+                                    <div class="param-row">
+                                        <div class="param-name">user_id</div>
+                                        <div class="param-type">string</div>
+                                        <div class="param-desc">The specific client target.</div>
+                                    </div>
+                                    <div class="param-row">
+                                        <div class="param-name">transaction</div>
+                                        <div class="param-type">object</div>
+                                        <div class="param-desc">Payload detailing the action. Schema varies by event type (<code>sales</code>, <code>purchase</code>, <code>initialize</code>, <code>write_off</code>, etc).</div>
+                                    </div>
+                                </div>
+
+                                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--text-primary);">Examples by Action Type</h4>
+                                <pre class="code-block"><code class="code-json">// Sales Action
+{
+  "api_key": "cognov_owner_key",
+  "user_id": "client_uuid",
+  "transaction": {
+    "action": "sales",
+    "item": "Keyboard",
+    "qty": 3,
+    "selling_price": 45
+  }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="docs-section" id="docs-fetch">
+                        <h3>Fetch Accounting Reports</h3>
+                        <div class="endpoint-card">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method">GET</span>
+                                <span class="endpoint-path">/fetch/{user_id}/{report_type}</span>
+                            </div>
+                            <div class="endpoint-body">
+                                <p class="endpoint-desc">Retrieves structured accounting statements compiled from transaction history.</p>
+                                
+                                <h4 style="font-size:0.9rem; margin-bottom:10px; color:var(--text-primary);">Path Parameters</h4>
+                                <div class="param-list">
+                                    <div class="param-row">
+                                        <div class="param-name">user_id</div>
+                                        <div class="param-type">required</div>
+                                        <div class="param-desc">UUID of the targeted client node.</div>
+                                    </div>
+                                    <div class="param-row">
+                                        <div class="param-name">report_type</div>
+                                        <div class="param-type">required</div>
+                                        <div class="param-desc">Specify report: <code>journal</code>, <code>trialbalance</code>, or <code>balancesheet</code>.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Tester Panel -->
+                    <div class="docs-section" id="docs-tester">
+                        <h3>Live Endpoint Tester</h3>
+                        <p style="margin-bottom: 20px;">Use the sandbox utility below to issue live REST requests to your configured CognoV backend server. Responses are highlighted in real-time.</p>
+                        
+                        <div class="tester-panel">
+                            <div class="tester-title">⚡ Interactive API Request Runner</div>
+                            
+                            <div class="tester-grid">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="testerUserIdSelect">Select Target Client</label>
+                                        <select id="testerUserIdSelect" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); background: var(--bg-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary);">
+                                            <option value="">-- No User ID (Only for Register) --</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="testerEndpointSelect">API Endpoint</label>
+                                        <select id="testerEndpointSelect" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); background: var(--bg-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary);">
+                                            <option value="/transaction">POST /transaction</option>
+                                            <option value="/register_user">POST /register_user</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="testerPresetSelect">Load Transaction Preset</label>
+                                        <select id="testerPresetSelect" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); background: var(--bg-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary);">
+                                            <option value="transaction">POST Sales Transaction</option>
+                                            <option value="purchase">POST Purchase Transaction</option>
+                                            <option value="initialize">POST Initialize Inventory</option>
+                                            <option value="register">POST Register Tenant</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="testerRequestBody">Payload Body (JSON)</label>
+                                        <textarea id="testerRequestBody" rows="7" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; resize: vertical;">{
+  "action": "sales",
+  "item": "Laptop",
+  "qty": 1,
+  "selling_price": 950
+}</textarea>
+                                    </div>
+                                    
+                                    <button class="btn btn-primary" id="testerSendBtn" style="width: 100%;">Execute Request</button>
+                                </div>
+                                
+                                <div style="display: flex; flex-direction: column;">
+                                    <label>HTTP Response Body</label>
+                                    <pre class="code-block" style="flex-grow: 1; margin: 0; min-height: 250px;"><code class="code-json" id="testerResponseBlock">// Executed requests outputs here</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= PRIVACY POLICY PAGE ======================= -->
+        <section class="container page-view" id="privacy" style="padding: 64px 0;">
+            <h2>🔒 Privacy Compliance Policy</h2>
+            <div class="card glass-panel">
+                <p style="margin-bottom: 24px; font-size: 0.95rem;">Effective Date: June 14, 2026</p>
+                
+                <div class="privacy-sections">
+                    <div class="privacy-card">
+                        <h3>1. Scope of Data Ingestion</h3>
+                        <p>CognoV processes transaction metadata (identifiers, quantities, values, event timestamps) and compiled double-entry journal entries solely to execute balances and reports. We do not inspect personal billing accounts or payment card identifiers.</p>
+                    </div>
+                    
+                    <div class="privacy-card">
+                        <h3>2. Data Processing & Isolation</h3>
+                        <p>All client nodes run in isolated database schemas. Transaction values, quantities, and inventory reports generated through the API are private to the registered client. Owner key accounts carry control credentials over their respective nodes.</p>
+                    </div>
+
+                    <div class="privacy-card">
+                        <h3>3. Data Security & Storage</h3>
+                        <p>Database instances are stored with encryption-at-rest (using AES-256) and data transfers occur encrypted in transit (TLS 1.3). API tokens are handled using cryptographic hashing layers before DB records generation.</p>
+                    </div>
+
+                    <div class="privacy-card">
+                        <h3>4. Retention and Deletion</h3>
+                        <p>Transaction records are retained for compliance audit trails. Database nodes can be completely purged or deleted at any time through the administration API. To initiate an account termination, contact <code>security@cognov.com</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container flex-between" style="flex-wrap: wrap;">
+            <div>
+                <div class="logo">CognoV</div>
+                <p>© 2026 CognoV Inc. Double-Entry ledger APIs for modern developers.</p>
+            </div>
+            <div style="text-align: right; color: var(--text-muted); font-size: 0.8rem;">
+                <p>Version 1.0.0 (Release build)</p>
+                <p style="margin-top: 4px;">Host Protocol: HTTPS (TLS 1.3)</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Client Inspector Modal -->
+    <div class="modal-overlay" id="explorerModal">
+        <div class="modal-card">
+            <div class="modal-header flex-between">
+                <div class="modal-title" id="modalClientTitle">Inspect Ledger</div>
+                <button class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            
+            <div style="background: var(--bg-surface); padding: 12px 32px; border-bottom: 1px solid var(--border-subtle); display:flex; gap:16px;">
+                <button class="ledger-tab modal-tab-btn active" data-tab="journal" onclick="switchExplorerTab('journal')">Journal Postings</button>
+                <button class="ledger-tab modal-tab-btn" data-tab="trialbalance" onclick="switchExplorerTab('trialbalance')">Trial Balance</button>
+                <button class="ledger-tab modal-tab-btn" data-tab="balancesheet" onclick="switchExplorerTab('balancesheet')">Balance Sheet</button>
+            </div>
+            
+            <div class="modal-body" id="modalTabContent">
+                <!-- Dynamic Ledger Data -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Script imports -->
+    <script src="app.js"></script>
+</body>
+</html>
