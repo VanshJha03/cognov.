@@ -1,7 +1,7 @@
 // ======================= GLOBAL STATE & CONFIG =======================
 let API_BASE_URL = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
     ? 'http://127.0.0.1:8000' 
-    : 'https://throbbing-bread-28b9.notthethunder.workers.dev'; // Default to user's Cloudflare Worker
+    : 'https://cognov.vanshjha451.workers.dev'; // Default to user's Cloudflare Worker
 
 let currentOwnerKey = "";
 let registeredUsers = []; // Stores user records from the server
