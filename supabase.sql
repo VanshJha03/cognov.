@@ -1,5 +1,6 @@
 CREATE TABLE owners (
     entity TEXT PRIMARY KEY,
+    owner_name TEXT DEFAULT '',
     api_key TEXT UNIQUE NOT NULL
 );
 

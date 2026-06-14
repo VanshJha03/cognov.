@@ -255,13 +255,20 @@ class TransactionRequest(BaseModel):
     transaction: Dict[str, Any]
 
 # ---------- API Endpoints ----------
-@app.post("/admin/generate_owner_api_key")
-def generate_owner_api_key(entity: str, master_secret: str):
-    if master_secret != os.getenv("MASTER_SECRET", "change_me"):
-        raise HTTPException(status_code=403, detail="Invalid master secret")
+@app.post("/register")
+def register_owner(entity: str, owner_name: str = ""):
+    """Open signup endpoint. Any inventory app can register to get an API key."""
+    # Check if this entity already has a key (prevent duplicates)
+    existing = supabase.table("owners").select("api_key").eq("entity", entity).execute()
+    if existing.data:
+        raise HTTPException(status_code=409, detail=f"Entity '{entity}' is already registered. Use your existing API key.")
     api_key = generate_api_key()
-    supabase.table("owners").upsert({"entity": entity, "api_key": api_key}).execute()
-    return {"api_key": api_key}
+    supabase.table("owners").insert({
+        "entity": entity,
+        "owner_name": owner_name,
+        "api_key": api_key
+    }).execute()
+    return {"api_key": api_key, "entity": entity, "owner_name": owner_name}
 
 @app.post("/register_user")
 def register_user(api_key: str):
