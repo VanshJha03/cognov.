@@ -1,7 +1,7 @@
 // ======================= GLOBAL STATE & CONFIG =======================
 let API_BASE_URL = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
     ? 'http://127.0.0.1:8000' 
-    : 'https://cognov.vanshjha451.workers.dev'; // Default to user's Cloudflare Worker
+    : window.location.origin + '/request'; // Proxy requests through Vercel rewrite in production
 
 let currentOwnerKey = "";
 let registeredUsers = []; // Stores user records from the server

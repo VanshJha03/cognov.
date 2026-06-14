@@ -53,7 +53,12 @@ def check_rate_limit(user_id: str):
 
 # ---------- Helper Functions ----------
 def generate_api_key() -> str:
-    return secrets.token_urlsafe(32)
+    alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return "".join(secrets.choice(alphabet) for _ in range(10))
+
+def generate_user_id() -> str:
+    alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    return "".join(secrets.choice(alphabet) for _ in range(8))
 
 def validate_api_key(api_key: str) -> bool:
     # Check owners table
@@ -262,7 +267,7 @@ def generate_owner_api_key(entity: str, master_secret: str):
 def register_user(api_key: str):
     if not validate_api_key(api_key):
         raise HTTPException(status_code=401, detail="Invalid API key")
-    user_id = str(uuid.uuid4())
+    user_id = generate_user_id()
     # Also generate a user-specific API key (optional, but we'll keep it simple: user uses same owner key)
     # For per‑user keys, uncomment below:
     # user_api_key = generate_api_key()

@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/request/:path*",
+      "destination": "https://cognov.vanshjha451.workers.dev/:path*"
+    }
+  ]
+}
