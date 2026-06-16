@@ -1,0 +1,10 @@
+[project]
+name = "cognov"
+version = "0.1.0"
+description = "Accounting API for Inventory Apps"
+dependencies = [
+    "fastapi",
+    "pydantic",
+    "supabase",
+    "python-dotenv"
+]
