@@ -14,7 +14,7 @@ from supabase import create_client, Client
 # ---------- Supabase Setup ----------
 supabase: Client = create_client(
     os.getenv("SUPABASE_URL", "https://sznqtrlrjfyxkzaplxsn.supabase.co"),
-    os.getenv("SUPABASE_KEY", "")
+    os.getenv("SUPABASE_KEY", "sb_publishable_K6hCv3g1u2fM2uh3vz8qkQ_3-nTdLmu")
 )
 
 # ---------- FastAPI App ----------
