@@ -13,7 +13,7 @@ from postgrest.exceptions import APIError
 
 # ---------- Supabase Setup (Hardcoded as requested) ----------
 SUPABASE_URL = "https://sznqtrlrjfyxkzaplxsn.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhjZmVieHdtZXB0ZXhucG56dGhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODMxOTEsImV4cCI6MjA5NTQ1OTE5MX0.DsR5LOgYYa2oitc9B9_mMk6tKOiO4WwyjGWU9H6wG4w"
+SUPABASE_KEY = "sb_secret_mgdl5W5C0s8dMy_DMxaUCg_IzyEh_EZ"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # ---------- FastAPI App ----------
