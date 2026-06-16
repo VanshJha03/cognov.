@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/request/:path*",
-      "destination": "https://cognov.vanshjha451.workers.dev/:path*"
+      "destination": "https://cognov.onrender.com/:path*"
     }
   ]
 }
