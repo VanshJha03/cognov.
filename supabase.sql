@@ -50,3 +50,14 @@ CREATE TABLE transactions_log (
     action TEXT NOT NULL,
     timestamp TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE TABLE assets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id TEXT REFERENCES users(user_id) ON DELETE CASCADE,
+    asset_name TEXT NOT NULL,
+    asset_type TEXT NOT NULL,
+    purchase_date TIMESTAMPTZ DEFAULT NOW(),
+    purchase_cost DECIMAL(15,2) NOT NULL,
+    current_value DECIMAL(15,2) NOT NULL,
+    status TEXT DEFAULT 'Active'
+);
