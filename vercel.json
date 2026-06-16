@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/request/:path*",
-      "destination": "https://cognov.onrender.com/:path*"
+      "destination": "/api/index.py"
     }
   ]
 }
