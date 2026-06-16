@@ -10,16 +10,12 @@ from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, validator
 from supabase import create_client, Client
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # ---------- Supabase Setup ----------
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://sznqtrlrjfyxkzaplxsn.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Missing SUPABASE_URL or SUPABASE_KEY in environment")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(
+    os.getenv("SUPABASE_URL", "https://sznqtrlrjfyxkzaplxsn.supabase.co"),
+    os.getenv("SUPABASE_KEY", "")
+)
 
 # ---------- FastAPI App ----------
 app = FastAPI(title="CognoV Accounting API", version="1.0")
