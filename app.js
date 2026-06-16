@@ -1,7 +1,7 @@
 // ======================= GLOBAL STATE & CONFIG =======================
 const API_BASE_URL = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
     ? 'http://127.0.0.1:8000'
-    : window.location.origin + '/request';
+    : 'https://cognov-3a24.vercel.app/request';
 
 let currentOwnerKey = '';
 let registeredUsers = [];

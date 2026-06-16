@@ -36,6 +36,7 @@ async def strip_request_prefix(request: Request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://cognov-3a24.vercel.app",
         "https://cogno.vercel.app",
         "https://cognov.github.io",
         "http://localhost:5500",

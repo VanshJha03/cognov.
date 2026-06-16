@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Accounting API for Inventory Apps"
 dependencies = [
     "fastapi",
+    "uvicorn",
     "pydantic",
     "supabase",
     "python-dotenv"
 ]
+
+[tool.vercel]
+entrypoint = "api/index.py:app"
